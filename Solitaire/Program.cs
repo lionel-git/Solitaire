@@ -40,23 +40,24 @@ namespace Solitaire
         {
             var board = new EnglishBoard(randomSeed);
             int N = 10000000;
-            int detailed = -1;
+            int detailed = 2583218;
+            int detailedSeed = 2;
             int minPawns = int.MaxValue;
             int posMinPawns = -1;
 
             int count = 0;
             for (int i = 0; i < N; i++)
             {
-                if (i == detailed)
+                if (i == detailed && randomSeed == detailedSeed)
                     Console.WriteLine($"==\n{board}");
                 // 
                 while (board.RandomMove())
                 {
-                    if (i == detailed)
+                    if (i == detailed && randomSeed == detailedSeed)
                         Console.WriteLine($"==\n{board}");
                 }
                 int pawns = board.Pawns;
-                if (i == detailed)
+                if (i == detailed && randomSeed == detailedSeed)
                     Console.WriteLine($"i={i} pawns={pawns}");
 
                 if (pawns < minPawns)
@@ -67,27 +68,37 @@ namespace Solitaire
                 }
                 if (board.Pawns <= 1)
                 {
-                    Console.WriteLine($"=== {i} =====");
+                    Console.WriteLine($"Solution found: i={i} (seed={randomSeed})");
                     Console.WriteLine(board);
                     count++;
                 }
                 board.Reset();
+
+                if (i%1000000==0)
+                    Console.WriteLine($"i={i} ({randomSeed})");
             }
-            Console.WriteLine($"Min: {minPawns} {posMinPawns}");
+            Console.WriteLine($"Min: {minPawns} {posMinPawns} (seed={randomSeed})");
             Console.WriteLine($"{count}/{N} {100.0 * (double)count / N}%");
         }
-        static void Main(string[] args)
+
+        static void TestEnglish()
         {
-            //TestTriangle();
             var tasks = new Task[8];
             for (int i = 0; i < tasks.Length; i++)
             {
-                tasks[i] = Task.Run(() => TestEnglish(i+1));
+                tasks[i] = Task.Run(() => TestEnglish(i + 1));
                 Thread.Sleep(1000);
-                if (tasks[i].Status!=TaskStatus.Running)
+                if (tasks[i].Status != TaskStatus.Running)
                     Console.WriteLine("Pb task?");
             }
             Task.WaitAll(tasks);
+        }
+
+
+        static void Main(string[] args)
+        {
+            TestTriangle();
+            //TestEnglish();
         }
     }
 }
