@@ -48,13 +48,31 @@ namespace Solitaire
             {
                 var board = new EnglishBoard(i + 1);
                 tasks[i] = Task.Run(() => TestBoard(board, 10000000));
-                Thread.Sleep(1000);
+                Thread.Sleep(100);
             }
             Task.WaitAll(tasks);
         }
 
+        static void Test()
+        {
+            var board = new TriangleBoard();
+
+            board.SaveRandomState();
+            for (int i = 0; i < 5; i++)
+                board.RandomMove();
+            board.RestoreRandomState();
+            board.SaveRandomState();
+            for (int i = 0; i < 7; i++)
+                board.RandomMove();
+            board.RestoreRandomState();
+
+            board.Reset();
+            TestBoard(board, 1000);
+        }
+
         static void Main(string[] args)
         {
+            //Test();
             //TestTriangle();
             TestEnglish();
         }
