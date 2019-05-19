@@ -14,7 +14,7 @@ namespace Solitaire
 
         protected List<Triplet> _triplets;
 
-        private Random _random = new Random(0);
+        private Random _random;
 
         /// <summary>
         /// Count pawns on the board
@@ -32,11 +32,26 @@ namespace Solitaire
             }
         }
 
-        protected Board(int rows, int columns, List<Point> directions)
+        protected Board(int rows, int columns, List<Point> directions, int randomSeed = 0)
         {
+            if (randomSeed!=0)
+                Console.WriteLine($"Using custom seed: {randomSeed}");
+            _random = new Random(randomSeed);
             _values = new Status[rows, columns];
             Reset();
             InitTriplets(directions);
+        }
+
+        protected void ResetAllPawns()
+        {
+            for (int i = 0; i < _values.GetLength(0); i++)
+                for (int j = 0; j < _values.GetLength(1); j++)
+                {
+                    if (IsInside(i, j))
+                        _values[i, j] = Status.Pawn;
+                    else
+                        _values[i, j] = Status.Invalid;
+                }
         }
 
         public abstract void Reset();
