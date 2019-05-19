@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Diagnostics;
 
 namespace Solitaire
 {
@@ -43,14 +44,18 @@ namespace Solitaire
 
         static void TestEnglish()
         {
-            var tasks = new Task[8];
+            var sw = new Stopwatch();
+            sw.Restart();
+            int N = 8000000;
+            var tasks = new Task[Environment.ProcessorCount];
             for (int i = 0; i < tasks.Length; i++)
             {
                 var board = new EnglishBoard(i + 1);
-                tasks[i] = Task.Run(() => TestBoard(board, 10000000));
+                tasks[i] = Task.Run(() => TestBoard(board, N/tasks.Length));
                 Thread.Sleep(100);
             }
             Task.WaitAll(tasks);
+            Console.WriteLine($"Elapsed: {sw.Elapsed} ({N}, {tasks.Length})");
         }
 
         static void Test()
@@ -72,6 +77,7 @@ namespace Solitaire
 
         static void Main(string[] args)
         {
+            Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.Idle;
             //Test();
             //TestTriangle();
             TestEnglish();
