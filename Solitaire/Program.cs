@@ -86,10 +86,9 @@ namespace Solitaire
             var tasks = new Task[8];
             for (int i = 0; i < tasks.Length; i++)
             {
-                tasks[i] = Task.Run(() => TestEnglish(i + 1));
+                int seed = i + 1;
+                tasks[i] = Task.Run(() => TestEnglish(seed));
                 Thread.Sleep(1000);
-                if (tasks[i].Status != TaskStatus.Running)
-                    Console.WriteLine("Pb task?");
             }
             Task.WaitAll(tasks);
         }
@@ -97,8 +96,8 @@ namespace Solitaire
 
         static void Main(string[] args)
         {
-            TestTriangle();
-            //TestEnglish();
+            //TestTriangle();
+            TestEnglish();
         }
     }
 }
