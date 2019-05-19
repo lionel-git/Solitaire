@@ -8,14 +8,17 @@ namespace Solitaire
 {
     public enum Status { Empty, Pawn, Invalid };
 
-    public class Board
+    public abstract class Board
     {
-        private Status[,] _values;
+        protected Status[,] _values;
 
-        private List<Triplet> _triplets;
+        protected List<Triplet> _triplets;
 
         private Random _random = new Random(0);
 
+        /// <summary>
+        /// Count pawns on the board
+        /// </summary>
         public int Pawns
         {
             get
@@ -29,38 +32,22 @@ namespace Solitaire
             }
         }
 
-        public Board()
+        protected Board(int rows, int columns, List<Point> directions)
         {
-            _values = new Status[5, 5];
+            _values = new Status[rows, columns];
             Reset();
-            InitTriplets();
+            InitTriplets(directions);
         }
 
-        public void Reset()
-        {
-            for (int i = 0; i < _values.GetLength(0); i++)
-                for (int j = 0; j < _values.GetLength(1); j++)
-                {
-                    if (IsInside(i, j))
-                        _values[i, j] = Status.Pawn;
-                    else
-                        _values[i, j] = Status.Invalid;
-                }
-            _values[2, 2] = Status.Empty;
-        }
+        public abstract void Reset();
 
-        private bool IsInside(int i,int j)
-        {
-            return i >= 0 && j >= 0 && i + j < 5;
-        }
-
-        private void InitTriplets()
+        protected abstract bool IsInside(int i, int j);
+    
+        private void InitTriplets(List<Point> directions)
         {
             _triplets = new List<Triplet>();
-            InitTripletDirection(1, 0);
-            InitTripletDirection(0, 1);
-            InitTripletDirection( 1,  1);
-            InitTripletDirection(-1,  1);
+            foreach (var direction in directions)
+                InitTripletDirection(direction.i, direction.j);
         }
 
         private void InitTripletDirection(int di, int dj)

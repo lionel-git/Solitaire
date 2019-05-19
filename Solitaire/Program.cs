@@ -10,15 +10,15 @@ namespace Solitaire
     {
         static void Main(string[] args)
         {
-            var board = new Board();
-            int N = 398;
+            var board = new TriangleBoard();
+            int N = 680;
             int count = 0;
             for (int i = 0; i < N; i++)
             {
                // 
                 while (board.RandomMove())
                 {
-                    if (i==397)
+                    if (i==679)
                       Console.WriteLine($"==\n{board}");
                   //  Console.WriteLine(board.Pawns);
                 }
@@ -30,7 +30,7 @@ namespace Solitaire
                 }
                 board.Reset();
             }
-            Console.WriteLine($"{count}/{N}");
+            Console.WriteLine($"{count}/{N} {100.0*(double)count/N}%");
         }
     }
 }
