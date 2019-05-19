@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,6 +17,12 @@ namespace Solitaire
         protected List<Triplet> _triplets;
 
         private Random _random;
+
+        private BinaryFormatter _formatter = new BinaryFormatter();
+        private MemoryStream _saveStream = new MemoryStream();
+
+        private int _seed;
+        public int Seed => _seed;
 
         /// <summary>
         /// Count pawns on the board
@@ -34,9 +42,10 @@ namespace Solitaire
 
         protected Board(int rows, int columns, List<Point> directions, int randomSeed = 0)
         {
-            if (randomSeed!=0)
-                Console.WriteLine($"Using custom seed: {randomSeed}");
-            _random = new Random(randomSeed);
+            _seed = randomSeed;
+            if (_seed != 0)
+                Console.WriteLine($"Using custom seed: {_seed}");
+            _random = new Random(_seed);
             _values = new Status[rows, columns];
             Reset();
             InitTriplets(directions);
@@ -98,6 +107,18 @@ namespace Solitaire
             else
                 return false;
         }
+
+        public void SaveRandomState()
+        {
+            _saveStream.Seek(0, SeekOrigin.Begin);
+            _formatter.Serialize(_saveStream, _random);
+        }
+        public void RestoreRandomState()
+        {
+            _saveStream.Seek(0, SeekOrigin.Begin);
+            _random = (Random)_formatter.Deserialize(_saveStream);
+        }
+
 
         public bool RandomMove()
         {

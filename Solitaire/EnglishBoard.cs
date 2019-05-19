@@ -17,7 +17,10 @@ namespace Solitaire
         public override void Reset()
         {
             ResetAllPawns();
-            _values[3, 3] = Status.Empty;
+            //_values[3, 3] = Status.Empty;
+            _values[1, 3] = Status.Empty;
+            _values[2, 3] = Status.Empty;
+            _values[3, 3] = Status.Pawn;
         }
 
         protected override bool IsInside(int i, int j)
