@@ -125,14 +125,14 @@ namespace Solitaire
         public override string ToString()
         {
             var sb = new StringBuilder();
-            for (int i = 0; i < _values.GetLength(0); i++)
+            for (int i = _values.GetLength(0)-1; i >=0 ; i--)
             {
                 for (int j = 0; j < _values.GetLength(1); j++)
                 {
                     switch (_values[i, j])
                     {
                         case Status.Invalid:
-                            sb.Append("#");
+                            sb.Append(" ");
                             break;
                         case Status.Empty:
                             sb.Append(".");
@@ -142,7 +142,7 @@ namespace Solitaire
                             break;
                     }
                 }
-                if (i< _values.GetLength(0)-1)
+                if (i>0)
                  sb.AppendLine();
             }
             return sb.ToString();
