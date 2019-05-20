@@ -46,7 +46,7 @@ namespace Solitaire
         {
             var sw = new Stopwatch();
             sw.Restart();
-            int N = 8000000;
+            int N = 16000000;
             var tasks = new Task[Environment.ProcessorCount];
             for (int i = 0; i < tasks.Length; i++)
             {
