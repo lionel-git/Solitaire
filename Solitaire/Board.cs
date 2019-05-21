@@ -132,6 +132,33 @@ namespace Solitaire
 
         public bool RandomMove()
         {
+            //if (_pawns <= 3)
+            //{
+            //    // Check if pawns are contiguous
+            //    int min_i = int.MaxValue;
+            //    int max_i = int.MinValue;
+            //    int min_j = int.MaxValue;
+            //    int max_j = int.MinValue;
+            //    for (int i = 0; i < _values.GetLength(0); i++)
+            //        for (int j = 0; j < _values.GetLength(1); j++)
+            //            if (_values[i, j] == Status.Pawn)
+            //            {
+            //                min_i = Math.Min(min_i, i);
+            //                min_j = Math.Min(min_j, j);
+            //                max_i = Math.Max(max_i, i);
+            //                max_j = Math.Max(max_j, j);
+            //            }                
+            //    int di = max_i - min_i;
+            //    int dj = max_j - min_j;
+            //    int min = Math.Min(di, dj);
+            //    int max = Math.Max(di, dj);
+            //    if (!(
+            //        (Pawns == 2 && (min == 0 && max == 1)) ||
+            //        (Pawns == 3 && ((min == 0 && max == 3) || (min == 1 && max == 2)))
+            //        ))
+            //        return false;
+            //}
+
             var perm = new int[_triplets.Count];
             for (int i = 0; i < perm.Length; i++)
                 perm[i] = i;
