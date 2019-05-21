@@ -14,9 +14,8 @@ namespace Solitaire
         {
         }
 
-        public override void Reset()
+        protected override void ResetEmptyPoints()
         {
-            ResetAllPawns();
             _values[2, 2] = Status.Empty;
         }
 

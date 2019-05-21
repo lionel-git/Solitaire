@@ -24,20 +24,23 @@ namespace Solitaire
         private int _seed;
         public int Seed => _seed;
 
+        private int _pawns;
+        public int Pawns => _pawns;
+
+        protected abstract void ResetEmptyPoints();
+
+        protected abstract bool IsInside(int i, int j);
+
         /// <summary>
         /// Count pawns on the board
         /// </summary>
-        public int Pawns
+        private void CountPawns()
         {
-            get
-            {
-                int pawns = 0;
-                for (int i = 0; i < _values.GetLength(0); i++)
-                    for (int j = 0; j < _values.GetLength(1); j++)
-                        if (_values[i, j] == Status.Pawn)
-                            pawns++;
-                return pawns;
-            }
+            _pawns = 0;
+            for (int i = 0; i < _values.GetLength(0); i++)
+                for (int j = 0; j < _values.GetLength(1); j++)
+                    if (_values[i, j] == Status.Pawn)
+                        _pawns++;            
         }
 
         protected Board(int rows, int columns, List<Point> directions, int randomSeed = 0)
@@ -48,10 +51,11 @@ namespace Solitaire
             _random = new Random(_seed);
             _values = new Status[rows, columns];
             Reset();
+            CountPawns();
             InitTriplets(directions);
         }
 
-        protected void ResetAllPawns()
+        private void ResetAllPawns()
         {
             for (int i = 0; i < _values.GetLength(0); i++)
                 for (int j = 0; j < _values.GetLength(1); j++)
@@ -63,9 +67,14 @@ namespace Solitaire
                 }
         }
 
-        public abstract void Reset();
+        public void Reset()
+        {
+            ResetAllPawns();
+            ResetEmptyPoints();
+            CountPawns();
+        }
 
-        protected abstract bool IsInside(int i, int j);
+
     
         private void InitTriplets(List<Point> directions)
         {
@@ -95,6 +104,7 @@ namespace Solitaire
             _values[t.Pos[0].i, t.Pos[0].j] = Status.Empty;
             _values[t.Pos[1].i, t.Pos[1].j] = Status.Empty;
             _values[t.Pos[2].i, t.Pos[2].j] = Status.Pawn;
+            _pawns--;
         }
 
         private bool TryMove(Triplet t)
