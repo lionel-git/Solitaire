@@ -32,7 +32,7 @@ namespace Solitaire
             _state = _a * _state + _c;
             var bitSelect = _state << 1;
             double r = (double)bitSelect / 4_294_967_296.0;
-            return (int)(r * (max - min));
+            return min + (int)(r * (max - min));
         }
 
         public void RestoreState()

@@ -54,6 +54,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomLCG.cs" />
     <Compile Include="RandomLCG64.cs" />
+    <Compile Include="RandomMT.cs" />
     <Compile Include="TriangleBoard.cs" />
     <Compile Include="Triplet.cs" />
   </ItemGroup>
