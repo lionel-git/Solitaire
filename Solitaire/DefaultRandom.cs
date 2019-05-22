@@ -10,8 +10,11 @@ namespace Solitaire
         private BinaryFormatter _formatter = new BinaryFormatter();
         private MemoryStream _saveStream = new MemoryStream();
 
-        public DefaultRandom(int seed)
+        public int InitialSeed { get; }
+
+        public DefaultRandom(int seed = 0)
         {
+            InitialSeed = seed;
             _random = new Random(seed);
         }
 

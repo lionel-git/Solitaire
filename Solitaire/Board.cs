@@ -14,18 +14,12 @@ namespace Solitaire
     {
         protected Status[,] _values;
 
-        protected List<Triplet> _triplets;
-
-        private Random _random;
-
-        private BinaryFormatter _formatter = new BinaryFormatter();
-        private MemoryStream _saveStream = new MemoryStream();
-
-        private int _seed;
-        public int Seed => _seed;
-
         private int _pawns;
         public int Pawns => _pawns;
+
+        protected List<Triplet> _triplets;
+
+        public IRandom Random { get; set; }
 
         protected abstract void ResetEmptyPoints();
 
@@ -43,16 +37,13 @@ namespace Solitaire
                         _pawns++;            
         }
 
-        protected Board(int rows, int columns, List<Point> directions, int randomSeed = 0)
+        protected Board(int rows, int columns, List<Point> directions, IRandom random)
         {
-            _seed = randomSeed;
-            if (_seed != 0)
-                Console.WriteLine($"Using custom seed: {_seed}");
-            _random = new Random(_seed);
             _values = new Status[rows, columns];
             Reset();
             CountPawns();
             InitTriplets(directions);
+            Random = random;
         }
 
         private void ResetAllPawns()
@@ -74,8 +65,6 @@ namespace Solitaire
             CountPawns();
         }
 
-
-    
         private void InitTriplets(List<Point> directions)
         {
             _triplets = new List<Triplet>();
@@ -118,18 +107,6 @@ namespace Solitaire
                 return false;
         }
 
-        public void SaveRandomState()
-        {
-            _saveStream.Seek(0, SeekOrigin.Begin);
-            _formatter.Serialize(_saveStream, _random);
-        }
-        public void RestoreRandomState()
-        {
-            _saveStream.Seek(0, SeekOrigin.Begin);
-            _random = (Random)_formatter.Deserialize(_saveStream);
-        }
-
-
         public bool RandomMove()
         {
             //if (_pawns <= 3)
@@ -167,7 +144,7 @@ namespace Solitaire
             bool found = false;
             do
             {
-                int p = _random.Next(0, remaining); //
+                int p = Random.Next(0, remaining); //
                 found = TryMove(_triplets[perm[p]]);
                 if (!found)
                 {

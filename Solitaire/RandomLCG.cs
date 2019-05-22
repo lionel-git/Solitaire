@@ -10,11 +10,14 @@ namespace Solitaire
         private uint _state = 0;
         private uint _backupState = 0;
 
-        public RandomLCG(uint seed, uint a = 1664525, uint c = 1013904223)
+        public int InitialSeed { get; }
+
+        public RandomLCG(int seed = 0, uint a = 1664525, uint c = 1013904223)
         {
             _a = a;
             _c = c;
-            _state = seed;
+            _state = (uint)seed;
+            InitialSeed = seed;
         }
 
         public void BackupState()

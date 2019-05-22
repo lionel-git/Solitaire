@@ -10,7 +10,7 @@ namespace Solitaire
     {
         static List<Point> _directions = new List<Point>() { new Point(1, 0), new Point(0, 1) };
 
-        public EnglishBoard(int randomSeed = 0) : base(7, 7, _directions, randomSeed)
+        public EnglishBoard(IRandom random) : base(7, 7, _directions, random)
         {
         }
 

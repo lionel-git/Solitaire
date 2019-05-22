@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace Solitaire
 {
-    interface IRandom
+    public interface IRandom
     {
         int Next(int min, int max);
         void BackupState();
         void RestoreState();
+        int InitialSeed { get; }
     }
 }

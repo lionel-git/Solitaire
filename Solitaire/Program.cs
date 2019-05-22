@@ -15,13 +15,13 @@ namespace Solitaire
             int count = 0;
             for (int i = 0; i < N; i++)
             {
-                board.SaveRandomState();
+                board.Random.BackupState();
                 while (board.RandomMove()) {}
                 if (board.Pawns <= 1)
                 {
-                    Console.WriteLine($"=== Found at test {i} (seed={board.Seed}) =====");
+                    Console.WriteLine($"=== Found at test {i} (seed={board.Random.InitialSeed}) =====");
                     board.Reset();
-                    board.RestoreRandomState();
+                    board.Random.RestoreState();
                     Console.WriteLine(board);
                     while (board.RandomMove())
                     {
@@ -31,14 +31,14 @@ namespace Solitaire
                 }
                 board.Reset();
                 if (i % 1000000 == 0)
-                    Console.WriteLine($"i={i} ({board.Seed})");
+                    Console.WriteLine($"i={i} ({board.Random.InitialSeed})");
             }
             Console.WriteLine($"{count}/{N} {100.0 * (double)count / N}%");
         }
 
         static void TestTriangle()
         {
-            var board = new TriangleBoard();
+            var board = new TriangleBoard(new RandomLCG());
             TestBoard(board, 1000);
         }
 
@@ -50,7 +50,7 @@ namespace Solitaire
             var tasks = new Task[Environment.ProcessorCount];
             for (int i = 0; i < tasks.Length; i++)
             {
-                var board = new EnglishBoard(i + 1);
+                var board = new EnglishBoard(new DefaultRandom(i+1));
                 tasks[i] = Task.Run(() => TestBoard(board, N/tasks.Length));
                 Thread.Sleep(100);
             }
@@ -58,27 +58,11 @@ namespace Solitaire
             Console.WriteLine($"Elapsed: {sw.Elapsed} ({N}, {tasks.Length})");
         }
 
-        static void Test()
-        {
-            var board = new TriangleBoard();
-
-            board.SaveRandomState();
-            for (int i = 0; i < 5; i++)
-                board.RandomMove();
-            board.RestoreRandomState();
-            board.SaveRandomState();
-            for (int i = 0; i < 7; i++)
-                board.RandomMove();
-            board.RestoreRandomState();
-
-            board.Reset();
-            TestBoard(board, 1000);
-        }
+     
 
         static void Main(string[] args)
         {
             Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.Idle;
-            //Test();
             //TestTriangle();
             TestEnglish();
         }
