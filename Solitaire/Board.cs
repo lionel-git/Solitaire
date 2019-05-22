@@ -36,7 +36,7 @@ namespace Solitaire
             for (int i = 0; i < _values.GetLength(0); i++)
                 for (int j = 0; j < _values.GetLength(1); j++)
                     if (_values[i, j] == Status.Pawn)
-                        _pawns++;            
+                        _pawns++;
         }
 
         protected Board(int rows, int columns, List<Point> directions, IRandom random)
@@ -46,7 +46,7 @@ namespace Solitaire
             CountPawns();
             InitTriplets(directions);
             Random = random;
-            Console.WriteLine($"Init board with {random.GetType()} (seed={random.InitialSeed})");
+            Console.WriteLine($"Init board with {random.GetType()} (seed={random.InitialSeed}) (Pawns={Pawns})");
         }
 
         private void ResetAllPawns()
@@ -81,7 +81,7 @@ namespace Solitaire
                 for (int j = 0; j < _values.GetLength(1); j++)
                     if (IsInside(i, j) && IsInside(i + 2 * di, j + 2 * dj))
                     {
-                        _triplets.Add(new Triplet(         i,          j,  di,  dj));
+                        _triplets.Add(new Triplet(i, j, di, dj));
                         _triplets.Add(new Triplet(i + 2 * di, j + 2 * dj, -di, -dj));
                     }
         }
@@ -112,34 +112,34 @@ namespace Solitaire
                 return false;
         }
 
-        public bool RandomMove()
+        public bool RandomMove(bool checkFinalPositions)
         {
-            //if (_pawns <= 3)
-            //{
-            //    // Check if pawns are contiguous
-            //    int min_i = int.MaxValue;
-            //    int max_i = int.MinValue;
-            //    int min_j = int.MaxValue;
-            //    int max_j = int.MinValue;
-            //    for (int i = 0; i < _values.GetLength(0); i++)
-            //        for (int j = 0; j < _values.GetLength(1); j++)
-            //            if (_values[i, j] == Status.Pawn)
-            //            {
-            //                min_i = Math.Min(min_i, i);
-            //                min_j = Math.Min(min_j, j);
-            //                max_i = Math.Max(max_i, i);
-            //                max_j = Math.Max(max_j, j);
-            //            }                
-            //    int di = max_i - min_i;
-            //    int dj = max_j - min_j;
-            //    int min = Math.Min(di, dj);
-            //    int max = Math.Max(di, dj);
-            //    if (!(
-            //        (Pawns == 2 && (min == 0 && max == 1)) ||
-            //        (Pawns == 3 && ((min == 0 && max == 3) || (min == 1 && max == 2)))
-            //        ))
-            //        return false;
-            //}
+            if (checkFinalPositions && _pawns <= 3)
+            {
+                // Check if pawns are contiguous
+                int min_i = int.MaxValue;
+                int max_i = int.MinValue;
+                int min_j = int.MaxValue;
+                int max_j = int.MinValue;
+                for (int i = 0; i < _values.GetLength(0); i++)
+                    for (int j = 0; j < _values.GetLength(1); j++)
+                        if (_values[i, j] == Status.Pawn)
+                        {
+                            min_i = Math.Min(min_i, i);
+                            min_j = Math.Min(min_j, j);
+                            max_i = Math.Max(max_i, i);
+                            max_j = Math.Max(max_j, j);
+                        }
+                int di = max_i - min_i;
+                int dj = max_j - min_j;
+                int min = Math.Min(di, dj);
+                int max = Math.Max(di, dj);
+                if (!(
+                    (Pawns == 2 && (min == 0 && max == 1)) ||
+                    (Pawns == 3 && ((min == 0 && max == 3) || (min == 1 && max == 2)))
+                    ))
+                    return false;
+            }
 
             var perm = new int[_triplets.Count];
             for (int i = 0; i < perm.Length; i++)
@@ -164,7 +164,7 @@ namespace Solitaire
         }
 
         private void ReplayMoves()
-        {            
+        {
             Reset();
             Console.WriteLine(this);
             foreach (var triplet in _replays)
@@ -175,9 +175,9 @@ namespace Solitaire
         }
 
         public bool TrySolve()
-        {            
-            _replays.Clear();            
-            while (RandomMove()) { }
+        {
+            _replays.Clear();
+            while (RandomMove(false)) { }
             if (Pawns <= 1)
             {
                 ReplayMoves();
@@ -189,7 +189,7 @@ namespace Solitaire
         public override string ToString()
         {
             var sb = new StringBuilder();
-            for (int i = _values.GetLength(0)-1; i >=0 ; i--)
+            for (int i = _values.GetLength(0) - 1; i >= 0; i--)
             {
                 for (int j = 0; j < _values.GetLength(1); j++)
                 {
@@ -206,8 +206,8 @@ namespace Solitaire
                             break;
                     }
                 }
-                if (i>0)
-                 sb.AppendLine();
+                if (i > 0)
+                    sb.AppendLine();
             }
             return sb.ToString();
         }

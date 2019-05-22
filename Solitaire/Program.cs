@@ -11,7 +11,7 @@ namespace Solitaire
     class Program
     {
         static void TestBoard(Board board, int N)
-        {            
+        {
             int count = 0;
             for (int i = 0; i < N; i++)
             {
@@ -37,12 +37,12 @@ namespace Solitaire
         {
             var sw = new Stopwatch();
             sw.Restart();
-            int N = 128_000_000;
+            int N = 16_000_000;
             var tasks = new Task[Environment.ProcessorCount];
             for (int i = 0; i < tasks.Length; i++)
             {
-                var board = new EnglishBoard(new RandomLCG(i+1));
-                tasks[i] = Task.Run(() => TestBoard(board, N/tasks.Length));
+                var board = new EnglishBoard(new RandomLCG(i + 1));
+                tasks[i] = Task.Run(() => TestBoard(board, N / tasks.Length));
                 Thread.Sleep(100);
             }
             Task.WaitAll(tasks);
@@ -63,8 +63,8 @@ namespace Solitaire
         static void Main(string[] args)
         {
             Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.Idle;
-           // TestRandom();
-            
+            // TestRandom();
+
             //TestTriangle();
             TestEnglish();
         }
