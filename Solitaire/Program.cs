@@ -15,19 +15,10 @@ namespace Solitaire
             int count = 0;
             for (int i = 0; i < N; i++)
             {
-                board.Random.BackupState();
-                while (board.RandomMove()) {}
-                if (board.Pawns <= 1)
+                if (board.TrySolve())
                 {
-                    Console.WriteLine($"=== Found at test {i} (seed={board.Random.InitialSeed}) =====");
-                    board.Reset();
-                    board.Random.RestoreState();
-                    Console.WriteLine(board);
-                    while (board.RandomMove())
-                    {
-                        Console.WriteLine($"==\n{board}");
-                    }
                     count++;
+                    Console.WriteLine($"Found at i={i} ({board.Random.InitialSeed})");
                 }
                 board.Reset();
                 if (i % 1000000 == 0)

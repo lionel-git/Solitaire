@@ -25,6 +25,8 @@ namespace Solitaire
 
         protected abstract bool IsInside(int i, int j);
 
+        private readonly List<Triplet> _replays = new List<Triplet>();
+
         /// <summary>
         /// Count pawns on the board
         /// </summary>
@@ -89,19 +91,21 @@ namespace Solitaire
             return _values[t.Pos[n].i, t.Pos[n].j];
         }
 
-        private void DoMove(Triplet t)
+        private void DoMove(Triplet t, bool record)
         {
             _values[t.Pos[0].i, t.Pos[0].j] = Status.Empty;
             _values[t.Pos[1].i, t.Pos[1].j] = Status.Empty;
             _values[t.Pos[2].i, t.Pos[2].j] = Status.Pawn;
             _pawns--;
+            if (record)
+                _replays.Add(t);
         }
 
         private bool TryMove(Triplet t)
         {
             if (GetStatus(t, 0) == Status.Pawn && GetStatus(t, 1) == Status.Pawn && GetStatus(t, 2) == Status.Empty)
             {
-                DoMove(t);
+                DoMove(t, true);
                 return true;
             }
             else
@@ -140,12 +144,11 @@ namespace Solitaire
             var perm = new int[_triplets.Count];
             for (int i = 0; i < perm.Length; i++)
                 perm[i] = i;
-
             int remaining = perm.Length;
             bool found = false;
             do
             {
-                int p = Random.Next(0, remaining); //
+                int p = Random.Next(0, remaining);
                 found = TryMove(_triplets[perm[p]]);
                 if (!found)
                 {
@@ -158,6 +161,29 @@ namespace Solitaire
             }
             while (!found && remaining > 0);
             return found;
+        }
+
+        private void ReplayMoves()
+        {            
+            Reset();
+            Console.WriteLine(this);
+            foreach (var triplet in _replays)
+            {
+                DoMove(triplet, false);
+                Console.WriteLine($"==\n{this}");
+            }
+        }
+
+        public bool TrySolve()
+        {            
+            _replays.Clear();            
+            while (RandomMove()) { }
+            if (Pawns <= 1)
+            {
+                ReplayMoves();
+                return true;
+            }
+            return false;
         }
 
         public override string ToString()
