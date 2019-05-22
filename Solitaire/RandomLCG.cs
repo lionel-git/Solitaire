@@ -14,10 +14,12 @@ namespace Solitaire
 
         public RandomLCG(int seed = 0, uint a = 1664525, uint c = 1013904223)
         {
+            InitialSeed = seed;
             _a = a;
             _c = c;
-            _state = (uint)seed;
-            InitialSeed = seed;
+            _state = 4_147_235_895 ^ (uint)seed;
+            for (int i = 0; i < 100; i++)
+                Next(0, 0);
         }
 
         public void BackupState()
@@ -28,7 +30,9 @@ namespace Solitaire
         public int Next(int min, int max)
         {
             _state = _a * _state + _c;
-            return (int)(((UInt64)(max - min) * (UInt64)(_state)) >> 32);
+            var bitSelect = _state << 1;
+            double r = (double)bitSelect / 4_294_967_296.0;
+            return (int)(r * (max - min));
         }
 
         public void RestoreState()

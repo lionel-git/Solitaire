@@ -44,6 +44,7 @@ namespace Solitaire
             CountPawns();
             InitTriplets(directions);
             Random = random;
+            Console.WriteLine($"Init board with {random.GetType()} (seed={random.InitialSeed})");
         }
 
         private void ResetAllPawns()

@@ -46,11 +46,11 @@ namespace Solitaire
         {
             var sw = new Stopwatch();
             sw.Restart();
-            int N = 16000000;
+            int N = 128_000_000;
             var tasks = new Task[Environment.ProcessorCount];
             for (int i = 0; i < tasks.Length; i++)
             {
-                var board = new EnglishBoard(new DefaultRandom(i+1));
+                var board = new EnglishBoard(new RandomLCG(i+1));
                 tasks[i] = Task.Run(() => TestBoard(board, N/tasks.Length));
                 Thread.Sleep(100);
             }
@@ -58,11 +58,22 @@ namespace Solitaire
             Console.WriteLine($"Elapsed: {sw.Elapsed} ({N}, {tasks.Length})");
         }
 
-     
+        static void TestRandom()
+        {
+            var lcg1 = new RandomLCG(1);
+            var lcg2 = new RandomLCG(2);
+            for (int i = 0; i < 100; i++)
+            {
+                Console.WriteLine($"{lcg1.Next(0, 100)}");
+                Console.WriteLine($" {lcg2.Next(0, 100)}");
+            }
+        }
 
         static void Main(string[] args)
         {
             Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.Idle;
+           // TestRandom();
+            
             //TestTriangle();
             TestEnglish();
         }
